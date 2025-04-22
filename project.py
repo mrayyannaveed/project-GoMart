@@ -23,7 +23,7 @@ def home():
         st.write("Number of Columns:", df.shape[1])
     if st.checkbox("Show Stats"):
         st.write(df.describe())
-    if st.checkbox("Show DataTypes"):
+    if st.checkbox("Show Duplicates"):
         st.write("Number of Duplicates:",df.duplicated().sum())
 def about():
     st.title("About US")
