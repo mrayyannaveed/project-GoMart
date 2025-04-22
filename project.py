@@ -54,7 +54,7 @@ def main():
         contact()
     elif option == "Generate Data":
         st.title("Generate Data Through API")
-        st.write("#### Enter the API to convert it into csv data format")
+        st.write("#### Enter the API to convert it into csv data format.")
         api = st.text_input("Enter API")
         if api:
             get_api_data(api)
