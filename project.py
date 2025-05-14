@@ -178,6 +178,7 @@ def home():
             except Exception as e:
                 st.error(f"Query failed: {e}")
 
+# ------------- About ----------------
 def about():
     st.title("📘 About Walmart")
     st.write("""
@@ -195,15 +196,18 @@ def about():
     for i, name in enumerate(founders):
         cols[i % 1].markdown(f"##### ✅ **{name}**")
 
+# -------------- Contact -------------------
 def contact():
     st.title("📞 Contact Us")
     st.info("📧 Email: mygomart@gmail.com")
     st.info("📱 Phone: 111-555-898")
 
+# -------------- Kaggle API Call ------------
 def get_api_data(api):
     kaggle.api.authenticate()
     kaggle.api.dataset_download_files(api, path='.', unzip=True)
 
+# --------------- Main -----------------------
 def main():
     if option == "🏠 Home":
         home()
