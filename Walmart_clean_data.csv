@@ -1,4 +1,4 @@
-invoice_id,Branch,City,category,unit_price,quantity,date,time,payment_method,rating,profit_margin,total
+invoice_id,branch,city,category,unit_price,quantity,date,time,payment_method,rating,profit_margin,total
 1,WALM003,San Antonio,Health and beauty,74.69,7.0,05/01/19,13:08:00,Ewallet,9.1,0.48,522.8299999999999
 2,WALM048,Harlingen,Electronic accessories,15.28,5.0,08/03/19,10:29:00,Cash,9.6,0.48,76.39999999999999
 3,WALM067,Haltom City,Home and lifestyle,46.33,7.0,03/03/19,13:23:00,Credit card,7.4,0.33,324.31
