@@ -3,6 +3,8 @@ import pandas as pd
 import streamlit as st
 import pymysql
 from sqlalchemy import create_engine 
+from config import get_mysql_engine
+
 
 # Page config
 st.set_page_config(
@@ -12,7 +14,7 @@ st.set_page_config(
 )
 
 # Database engine
-engine_mysql = create_engine('mysql+pymysql://root:phe9B%40rBit0ne@localhost:3306/walmart_db')
+engine_mysql = get_mysql_engine()
 
 # Session data
 if 'df' not in st.session_state:
