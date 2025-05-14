@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 
 # Page config
 st.set_page_config(
-    page_title="Go Mart",
+    page_title="Walmart",
     page_icon="🛒",
     layout="wide"
 )
@@ -23,8 +23,8 @@ option = st.sidebar.radio("📂 Navigation", ["🏠 Home", "ℹ️ About", "📞
 
 # ----------------------------- UI SECTIONS -----------------------------
 def home():
-    st.title("🏪 Go Mart Online Store")
-    st.markdown("Welcome to **Go Mart**, your one-stop solution for all your shopping needs.")
+    st.title("🏪 Walart Online Store")
+    st.markdown("Welcome to **Walmart**, your one-stop solution for all your shopping needs.")
 
     with st.container():
         st.subheader("🛍 Product Overview")
@@ -179,9 +179,9 @@ def home():
                 st.error(f"Query failed: {e}")
 
 def about():
-    st.title("📘 About Go Mart")
+    st.title("📘 About Walmart")
     st.write("""
-    At Go Mart, we're building a better world — helping people live healthier lives, promoting sustainability, and fostering community.
+    At Walmart, we're building a better world — helping people live healthier lives, promoting sustainability, and fostering community.
     """)
     st.subheader("🧑‍💼 Meet The Team")
     cols = st.columns(2)
