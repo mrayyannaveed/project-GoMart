@@ -1,209 +1,10 @@
-# import kaggle
-# import pandas as pd
-# import streamlit as st
-# import pymysql
-# from sqlalchemy import create_engine 
-
-# st.set_page_config(
-#     page_title="Go Mart",
-#     page_icon="🧊",
-#     layout="wide"
-# )
-# engine_mysql = create_engine('mysql+pymysql://root:phe9B%40rBit0ne@localhost:3306/walmart_db')
-
-# # Initialize session state for the DataFrame if it doesn't exist
-# if 'df' not in st.session_state:
-#     st.session_state.df = pd.read_csv("Walmart.csv", encoding_errors='ignore')
-
-# option = st.sidebar.radio("Select a page", ["Home", "About", "Contact", "Generate Data"])
-
-# def home():
-#     st.title("🏪Go Mart Online Store")
-#     st.write("Welcome to Go Mart, your one-stop shop for all your grocery needs.")
-    
-#     st.markdown("### 🛒Our Products")
-#     if st.checkbox(" Show Products"):
-#         mydf = st.session_state.df.head(8)
-#         st.dataframe(mydf, hide_index=True)
-    
-#     if st.checkbox("Show Rows and Columns"):
-#         st.write("Number of Rows:", st.session_state.df.shape[0])
-#         st.write("Number of Columns:", st.session_state.df.shape[1])
-    
-#     if st.checkbox("Show Stats"):
-#         st.write(st.session_state.df.describe())
-    
-#     if st.checkbox("Show Duplicates"):
-#         st.write("Number of Duplicates:", st.session_state.df.duplicated().sum())
-    
-#     if st.button("Remove Duplicates"):
-#         if st.session_state.df.duplicated().sum() == 0:
-#             st.warning("No duplicates found!")
-#         else:
-#             st.session_state.df = st.session_state.df.drop_duplicates()
-#             st.success("Successfully removed duplicates!")
-    
-#     if st.button("Drop rows with missing records"):
-#         # Store original row count
-#         original_rows = st.session_state.df.shape[0]
-        
-#         # Drop null values
-#         st.session_state.df = st.session_state.df.dropna()
-        
-#         # Calculate how many rows were dropped
-#         dropped_rows = original_rows - st.session_state.df.shape[0]
-        
-#         st.success(f"Successfully dropped {dropped_rows} rows with missing values!")
-#         # No need for rerun - Streamlit will automatically refresh
-        
-#     if st.button("Show Null Values"):
-#         st.write("Number of Null Values:", st.session_state.df.isnull().sum())
-
-#     if st.button("Replace Dollar"):
-#         st.session_state.df['unit_price'] = st.session_state.df['unit_price'].str.replace('$', '').astype(float)
-#         st.success("Successfully replaced dollar signs!")
-
-#     if st.button("Add Total Column"):
-#         st.session_state.df['total'] = st.session_state.df['unit_price'] * st.session_state.df['quantity']
-#         st.success("Successfully added total column!")
-    
-#     if st.button("Create csv file"):
-#         st.session_state.df.to_csv("Walmart_clean_data.csv", index=False)
-#         st.success("Successfully created csv file!")
-    
-#     if st.button("Connect Database and Create Table"):
-#         try:
-#             engine_mysql
-
-#             st.session_state.df.to_sql('walmart', con=engine_mysql, if_exists='replace', index=False)
-#             st.success("Database connected successfully!")
-            
-#         except Exception as e:
-#             st.error(f"Operation failed: {e}")
-    
-#     if st.button("Get Lower"):
-#         st.session_state.df.columns = st.session_state.df.columns.str.lower()
-#         st.success("Successfully converted to lowercase!")
-
-#     if st.button("Get Group By"):
-#         try:
-#             query = """
-#             SELECT 
-#                 payment_method, 
-#                 COUNT(*) AS no_payments, 
-#                 SUM(quantity) AS no_qnty_sold 
-#             FROM walmart 
-#             GROUP BY payment_method;
-#             """
-
-#             df_grouped = pd.read_sql_query(query, engine_mysql)
-
-#             # Show result on UI
-#             st.subheader("💳 Payments Summary")
-#             st.dataframe(df_grouped)
-
-#         except Exception as e:
-#             st.error(f"Error retrieving grouped data: {e}")
-
-    
-#     if st.button("Show Top Rated Category per Branch"):
-#         try:
-#             query = """
-#             SELECT *
-#             FROM (
-#                 SELECT 
-#                     branch, 
-#                     category, 
-#                     AVG(rating) AS avg_rating,
-#                     RANK() OVER (PARTITION BY branch ORDER BY AVG(rating) DESC) AS rnk
-#                 FROM walmart
-#                 GROUP BY branch, category
-#             ) ranked
-#             WHERE rnk = 1;
-#             """
-
-#             # Read data using pandas
-#             df_top = pd.read_sql_query(query, engine_mysql)
-
-#             # Show result on UI
-#             st.subheader("🏆 Top Rated Category per Branch")
-#             st.dataframe(df_top, hide_index=True)
-
-#         except Exception as e:
-#             st.error(f"Error retrieving data: {e}")
-#     if st.button("Show Top Rated Day per Branch"):
-#         try:
-#             query = """
-#             SELECT *
-#             FROM (
-#                 SELECT
-#                     branch,
-#                     DAYNAME(date) AS day_name,
-#                     COUNT(*) AS total_sales,
-#                     RANK() OVER (PARTITION BY branch ORDER BY COUNT(*) DESC) AS rnk
-#                 FROM walmart
-#                 GROUP BY branch, day_name
-#             ) AS ranked
-#             WHERE rnk = 1;
-#             """
-
-#             # Read data using pandas
-#             df_top = pd.read_sql_query(query, engine_mysql)
-
-#             # Show result on UI
-#             st.subheader("🏆 Top Rated Day per Branch")
-#             st.dataframe(df_top, hide_index=True)
-
-#         except Exception as e:
-#             st.error(f"Error retrieving data: {e}")<e
-
-
-
-# def about():
-#     st.title("About US")
-#     st.write("We aim to build a better world — helping people live better and renew the planet while building thriving, resilient communities. For us, this means working to create opportunity, build a more sustainable future, advance belonging and bring communities closer together.")
-#     st.header("Go Mart Owner's 💰")
-#     st.write("### Muhammad Rayyan Naveed") 
-#     st.write("### Muhammad Saim Rao") 
-#     st.write("### Muhammad Sajjid Jhedu") 
-#     st.write("### Syed Zohaib Shah")
-#     st.write("### Shayan Meo Rajput")
-
-# def contact():
-#     st.title("Contact Go Mart")
-#     st.write("#### 📧mygomart@gmail.com")
-#     st.write("#### 📞111-555-898")
-
-# def get_api_data(api):
-#         kaggle.api.authenticate()
-#         kaggle.api.dataset_download_files(api, path='.', unzip=True)
-    
-# def main():
-#     if option == "Home":
-#         home()
-#     elif option == "About":
-#         about()
-#     elif option == "Contact":
-#         contact()
-#     elif option == "Generate Data":
-#         st.title("Generate Data Through API")
-#         st.write("#### Enter the API to convert it into csv data format.")
-#         api = st.text_input("Enter API")
-#         if api:
-#             get_api_data(api)
-#         else:
-#             st.success("Please enter an API")
-    
-
-# if __name__ == "__main__":
-#     main()
-
 import kaggle
 import pandas as pd
 import streamlit as st
 import pymysql
 from sqlalchemy import create_engine 
 
+# Page config
 st.set_page_config(
     page_title="Go Mart",
     page_icon="🛒",
@@ -213,153 +14,176 @@ st.set_page_config(
 # Database engine
 engine_mysql = create_engine('mysql+pymysql://root:phe9B%40rBit0ne@localhost:3306/walmart_db')
 
-# Load dataset if not in session
+# Session data
 if 'df' not in st.session_state:
     st.session_state.df = pd.read_csv("Walmart.csv", encoding_errors='ignore')
 
 # Sidebar navigation
-option = st.sidebar.radio("📂 Navigation", ["🏠 Home", "ℹ️ About", "📞 Contact", "📤 Generate Data"])
+option = st.sidebar.radio("📂 Navigation", ["🏠 Home", "ℹ️ About", "📞 Contact", "📊 Generate Data"])
 
+# ----------------------------- UI SECTIONS -----------------------------
 def home():
-    st.title("🏪 Welcome to Go Mart")
-    st.caption("Your one-stop shop for all your grocery needs!")
+    st.title("🏪 Go Mart Online Store")
+    st.markdown("Welcome to **Go Mart**, your one-stop solution for all your shopping needs.")
 
-    st.markdown("---")
-
-    st.subheader("📊 Data Overview")
-    with st.expander("🔍 Preview & Structure"):
-        st.write("### Sample Products")
-        st.dataframe(st.session_state.df.head(8), use_container_width=True)
+    with st.container():
+        st.subheader("🛍 Product Overview")
 
         col1, col2 = st.columns(2)
         with col1:
-            st.metric("Rows", st.session_state.df.shape[0])
+            show_products = st.toggle("Show Products")
+            if show_products:
+                st.dataframe(st.session_state.df.head(8), hide_index=True, use_container_width=True)
+
         with col2:
-            st.metric("Columns", st.session_state.df.shape[1])
+            show_shape = st.toggle("Show Dataset Info")
+            if show_shape:
+                st.write("🧾 Rows:", st.session_state.df.shape[0])
+                st.write("🧾 Columns:", st.session_state.df.shape[1])
 
-        if st.checkbox("Show Statistics Summary"):
-            st.write(st.session_state.df.describe())
-
-    with st.expander("🧹 Data Cleaning"):
+    with st.expander("🔍 Data Cleaning & Insights"):
         col1, col2, col3 = st.columns(3)
+        with col1:
+            if st.button("🔁 Remove Duplicates"):
+                if st.session_state.df.duplicated().sum() == 0:
+                    st.info("No duplicates found.")
+                else:
+                    st.session_state.df.drop_duplicates(inplace=True)
+                    st.success("Duplicates removed!")
 
-        if col1.button("Remove Duplicates"):
-            count = st.session_state.df.duplicated().sum()
-            if count > 0:
-                st.session_state.df = st.session_state.df.drop_duplicates()
-                st.success(f"✅ Removed {count} duplicate rows.")
-            else:
-                st.info("No duplicates found.")
+            if st.button("📉 Drop Null Records"):
+                before = len(st.session_state.df)
+                st.session_state.df.dropna(inplace=True)
+                dropped = before - len(st.session_state.df)
+                st.success(f"Dropped {dropped} records with null values.")
 
-        if col2.button("Drop Missing Records"):
-            orig = st.session_state.df.shape[0]
-            st.session_state.df.dropna(inplace=True)
-            new = st.session_state.df.shape[0]
-            st.success(f"✅ Dropped {orig - new} rows with missing values.")
+        with col2:
+            if st.button("📊 Show Null Values"):
+                st.dataframe(st.session_state.df.isnull().sum().reset_index(), hide_index=True)
 
-        if col3.button("Show Null Values"):
-            st.write("Null Values by Column:")
-            st.dataframe(st.session_state.df.isnull().sum(), use_container_width=True)
+            if st.button("💲 Clean Currency"):
+                st.session_state.df['unit_price'] = st.session_state.df['unit_price'].str.replace('$', '', regex=False).astype(float)
+                st.success("Removed dollar signs.")
 
-    with st.expander("🔧 Data Transformation"):
-        col1, col2 = st.columns(2)
-
-        if col1.button("💲 Remove Dollar Sign in Price"):
-            st.session_state.df['unit_price'] = st.session_state.df['unit_price'].str.replace('$', '', regex=False).astype(float)
-            st.success("Dollar signs removed.")
-
-        if col2.button("➕ Add Total Column"):
-            if 'unit_price' in st.session_state.df.columns and 'quantity' in st.session_state.df.columns:
+        with col3:
+            if st.button("➕ Add Total Column"):
                 st.session_state.df['total'] = st.session_state.df['unit_price'] * st.session_state.df['quantity']
                 st.success("Total column added.")
 
-    with st.expander("📥 Save & Export"):
+            if st.button("💾 Save as CSV"):
+                st.session_state.df.to_csv("Walmart_clean_data.csv", index=False)
+                st.success("CSV file created.")
+
+    with st.expander("🗃 Database Actions"):
         col1, col2 = st.columns(2)
-        if col1.button("💾 Create Clean CSV"):
-            st.session_state.df.to_csv("Walmart_clean_data.csv", index=False)
-            st.success("Clean CSV saved.")
+        with col1:
+            if st.button("🔗 Upload to MySQL"):
+                try:
+                    st.session_state.df.to_sql('walmart', con=engine_mysql, if_exists='replace', index=False)
+                    st.success("Data uploaded to MySQL successfully.")
+                except Exception as e:
+                    st.error(f"Upload failed: {e}")
 
-        if col2.button("🔡 Convert Column Names to Lowercase"):
-            st.session_state.df.columns = st.session_state.df.columns.str.lower()
-            st.success("Column names converted to lowercase.")
+        with col2:
+            if st.button("🔤 Normalize Column Names"):
+                st.session_state.df.columns = st.session_state.df.columns.str.lower()
+                st.success("Column names converted to lowercase.")
 
-    with st.expander("🛢️ Database Operations"):
-        if st.button("📡 Connect and Upload to Database"):
+    with st.expander("📈 Analytical Reports"):
+        analysis_options = [
+            "Group By Payment Method",
+            "Top Rated Category per Branch",
+            "Top Rated Day per Branch",
+            "Quantity Sold per Payment Method",
+            "Min/Max/Avg Rating per City and Category",
+            "Total Revenue and Profit per Category",
+            "Top Payment Method per Branch",
+            "Total Transactions per Branch & Time",
+            "Revenue: 2022 vs 2023"
+        ]
+        selected_analysis = st.selectbox("📊 Choose an analysis to run", analysis_options)
+
+        queries = {
+            "Group By Payment Method": """
+                SELECT payment_method, COUNT(*) AS no_payments, SUM(quantity) AS no_qnty_sold 
+                FROM walmart GROUP BY payment_method;
+            """,
+            "Top Rated Category per Branch": """
+                SELECT * FROM (
+                    SELECT branch, category, AVG(rating) AS avg_rating,
+                    RANK() OVER (PARTITION BY branch ORDER BY AVG(rating) DESC) AS rnk
+                    FROM walmart GROUP BY branch, category
+                ) AS ranked WHERE rnk = 1;
+            """,
+            "Top Rated Day per Branch": """
+                SELECT * FROM (
+                    SELECT branch, DAYNAME(date) AS day_name, COUNT(*) AS total_sales,
+                    RANK() OVER (PARTITION BY branch ORDER BY COUNT(*) DESC) AS rnk
+                    FROM walmart GROUP BY branch, day_name
+                ) AS ranked WHERE rnk = 1;
+            """,
+            "Quantity Sold per Payment Method": """
+                SELECT payment_method, SUM(quantity) as no_of_quantity_sold 
+                FROM walmart GROUP BY payment_method;
+            """,
+            "Min/Max/Avg Rating per City and Category": """
+                SELECT city, category, MIN(rating) as min_rating, MAX(rating) as max_rating, AVG(rating) as avg_rating 
+                FROM walmart GROUP BY city, category;
+            """,
+            "Total Revenue and Profit per Category": """
+                SELECT category, SUM(total) as total_revenue, SUM(total * profit_margin) as profit 
+                FROM walmart GROUP BY category ORDER BY profit DESC;
+            """,
+            "Top Payment Method per Branch": """
+                WITH cte AS (
+                    SELECT branch, payment_method, COUNT(*) AS total_trans, 
+                    RANK() OVER(PARTITION BY branch ORDER BY COUNT(*) DESC) AS rnk 
+                    FROM walmart GROUP BY branch, payment_method
+                ) SELECT * FROM cte WHERE rnk = 1;
+            """,
+            "Total Transactions per Branch & Time": """
+                SELECT branch,
+                CASE
+                    WHEN HOUR(TIME(time)) < 12 THEN 'Morning'
+                    WHEN HOUR(TIME(time)) BETWEEN 12 AND 17 THEN 'Afternoon'
+                    ELSE 'Evening'
+                END AS day_time,
+                COUNT(*) AS total_transactions
+                FROM walmart
+                GROUP BY branch, day_time
+                ORDER BY branch, total_transactions DESC;
+            """,
+            "Revenue: 2022 vs 2023": """
+                WITH revenue_2022 AS (
+                    SELECT branch, SUM(total) AS revenue 
+                    FROM walmart WHERE YEAR(STR_TO_DATE(date, '%%d/%%m/%%y')) = 2022 GROUP BY branch
+                ),
+                revenue_2023 AS (
+                    SELECT branch, SUM(total) AS revenue 
+                    FROM walmart WHERE YEAR(STR_TO_DATE(date, '%%d/%%m/%%y')) = 2023 GROUP BY branch
+                )
+                SELECT ls.branch, ls.revenue AS last_year_revenue, cs.revenue AS cr_year_revenue,
+                ROUND((ls.revenue - cs.revenue) / ls.revenue * 100, 2) AS rev_dec_ratio
+                FROM revenue_2022 AS ls
+                JOIN revenue_2023 AS cs ON ls.branch = cs.branch
+                WHERE ls.revenue > cs.revenue
+                ORDER BY rev_dec_ratio DESC;
+            """
+        }
+
+        if st.button("📥 Run Analysis"):
             try:
-                st.session_state.df.to_sql('walmart', con=engine_mysql, if_exists='replace', index=False)
-                st.success("Uploaded data to MySQL successfully.")
+                df_result = pd.read_sql_query(queries[selected_analysis], engine_mysql)
+                st.dataframe(df_result, use_container_width=True, hide_index=True)
             except Exception as e:
-                st.error(f"Error: {e}")
-
-    st.markdown("---")
-    st.subheader("📈 Insights & Analysis")
-
-    tabs = st.tabs(["📊 Grouped Summary", "🏆 Top Category by Branch", "🗓️ Top Day by Branch"])
-
-    with tabs[0]:
-        if st.button("Show Grouped Payment Data"):
-            try:
-                query = """
-                SELECT 
-                    payment_method, 
-                    COUNT(*) AS no_payments, 
-                    SUM(quantity) AS no_qnty_sold 
-                FROM walmart 
-                GROUP BY payment_method;
-                """
-                df_grouped = pd.read_sql_query(query, engine_mysql)
-                st.dataframe(df_grouped, use_container_width=True)
-            except Exception as e:
-                st.error(f"Query error: {e}")
-
-    with tabs[1]:
-        if st.button("Show Top Rated Category per Branch"):
-            try:
-                query = """
-                SELECT *
-                FROM (
-                    SELECT 
-                        branch, 
-                        category, 
-                        AVG(rating) AS avg_rating,
-                        RANK() OVER (PARTITION BY branch ORDER BY AVG(rating) DESC) AS rnk
-                    FROM walmart
-                    GROUP BY branch, category
-                ) ranked
-                WHERE rnk = 1;
-                """
-                df_top = pd.read_sql_query(query, engine_mysql)
-                st.dataframe(df_top, use_container_width=True)
-            except Exception as e:
-                st.error(f"Query error: {e}")
-
-    with tabs[2]:
-        if st.button("Show Top Rated Day per Branch"):
-            try:
-                query = """
-                SELECT *
-                FROM (
-                    SELECT
-                        branch,
-                        DAYNAME(date) AS day_name,
-                        COUNT(*) AS total_sales,
-                        RANK() OVER (PARTITION BY branch ORDER BY COUNT(*) DESC) AS rnk
-                    FROM walmart
-                    GROUP BY branch, day_name
-                ) ranked
-                WHERE rnk = 1;
-                """
-                df_day = pd.read_sql_query(query, engine_mysql)
-                st.dataframe(df_day, use_container_width=True)
-            except Exception as e:
-                st.error(f"Query error: {e}")
+                st.error(f"Query failed: {e}")
 
 def about():
     st.title("📘 About Go Mart")
     st.write("""
     At Go Mart, we're building a better world — helping people live healthier lives, promoting sustainability, and fostering community.
     """)
-    st.subheader("💼 Founders")
+    st.subheader("🧑‍💼 Meet The Team")
     cols = st.columns(2)
     founders = [
         "Muhammad Rayyan Naveed",
@@ -369,7 +193,7 @@ def about():
         "Shayan Meo Rajput"
     ]
     for i, name in enumerate(founders):
-        cols[i % 2].markdown(f"✅ **{name}**")
+        cols[i % 1].markdown(f"##### ✅ **{name}**")
 
 def contact():
     st.title("📞 Contact Us")
@@ -387,15 +211,16 @@ def main():
         about()
     elif option == "📞 Contact":
         contact()
-    elif option == "📤 Generate Data":
-        st.title("📡 Download Data via Kaggle API")
-        st.write("Enter the Kaggle API path to download and unzip a dataset.")
-        api = st.text_input("🔗 Enter Kaggle API Path")
-        if api:
-            get_api_data(api)
-            st.success("✅ Data downloaded and extracted.")
-        else:
-            st.warning("⚠️ Please enter a valid API path.")
+    elif option == "📊 Generate Data":
+        st.title("📡 Generate Data from Kaggle API")
+        st.markdown("Enter the Kaggle dataset API path to download and convert it into CSV format.")
+        api = st.text_input("🔗 API Endpoint")
+        if st.button("⬇️ Fetch Dataset"):
+            if api:
+                get_api_data(api)
+                st.success("Dataset downloaded and unzipped.")
+            else:
+                st.warning("Please enter a valid API.")
 
 if __name__ == "__main__":
     main()
