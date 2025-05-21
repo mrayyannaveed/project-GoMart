@@ -6,8 +6,8 @@ from sqlalchemy import create_engine
 from config import get_mysql_engine
 import os
 
-os.environ['KAGGLE_USERNAME'] = os.getenv('KAGGLE_USERNAME')
-os.environ['KAGGLE_KEY'] = os.getenv('KAGGLE_KEY')
+# os.environ['KAGGLE_USERNAME'] = os.getenv('KAGGLE_USERNAME')
+# os.environ['KAGGLE_KEY'] = os.getenv('KAGGLE_KEY')
 
 # Page config
 st.set_page_config(
